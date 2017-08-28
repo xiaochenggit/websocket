@@ -28,7 +28,7 @@ var Game = function() {
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,1,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0]
     ];
     
@@ -148,6 +148,9 @@ var Game = function() {
             cur.down();
             setGameData();
             refreshDiv(gameData, gameDivs);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -171,24 +174,29 @@ var Game = function() {
         }
     }
 
+    // 旋转方法
+    var rotate = function() {
+        if(cur.canRotate(isValid)) {
+            clearGameData();
+            cur.rotate();
+            setGameData();
+            refreshDiv(gameData, gameDivs);
+        }
+    }
+
     /**
      * 初始化
      * @param {Object} doms dom元素 
      */
     var init = function(doms) {
-
+        var squareFactory = new SquareFactory();
         gameDiv = doms.gameDiv;
         nextDiv = doms.nextDiv;
-        cur = new Square();
+        cur = squareFactory.make();
         next = new Square();
         initDiv(gameDiv, gameData, gameDivs);
         initDiv(nextDiv, next.data, nextDivs);
-
-        // 手动设置 当前块的位置
-        cur.origin = {
-            x: 10,
-            y: 5
-        }
+        // 设置数据
         setGameData();
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
@@ -200,4 +208,11 @@ var Game = function() {
     this.down = down;
     this.right = right;
     this.left = left;
+    this.rotate = rotate;
+
+    // 下落
+    this.fall = function(){
+        while (down()) {
+        }
+    }
 }

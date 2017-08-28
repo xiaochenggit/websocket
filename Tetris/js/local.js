@@ -8,7 +8,7 @@ var Local = function() {
             e.preventDefault();
             var keyCode = e.keyCode;
             if(keyCode == 38) { // up
-
+                game.rotate();
             } else if (keyCode == 39) { // right
                 game.right();
             } else if (keyCode == 40) { // down
@@ -16,7 +16,7 @@ var Local = function() {
             } else if (keyCode == 37) { // left 
                 game.left();
             } else if (keyCode == 32) { // space
-
+                game.fall();
             }
         }
     }
