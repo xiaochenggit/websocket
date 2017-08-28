@@ -75,9 +75,89 @@ var Game = function() {
             }
         }
     };
+    /**
+     * 判断是否可以下移
+     * @param {any} pos cur + 1之后的坐标
+     * @param {any} data 
+     * @returns 
+     */
+    var isValid = function(pos,data) {
 
-    // 初始化
+        for(var i = data.length - 1; i< data.length; i++) {
+            for(var j = 0; j< data[0].length; j++) {
+                if(data[i][j] != 0) {
+                    if(!check(pos, i, j)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 判断位置是否合法 
+     * @param {Object} pos cur坐标
+     * @param {any} x 
+     * @param {any} y 
+     * @returns 
+     */
+    var check = function(pos, x, y) {
+       if (pos.x + x < 0) {
+           return false
+       } else if (pos.x + x >= gameData.length) {
+           return false;
+       } else if (pos.y + y < 0) {
+           return false
+       } else if (pos.y + y >= gameData[0].length) {
+           return false;
+       } else if (gameData[pos.x + x][pos.y + y] == 1) { // 已经有块了
+           return false
+       } else {
+           return true;
+       }
+    }
+
+    // 清空 cur 在 gameDate 中的数据
+    var clearGameData = function() {
+        var origin = cur.origin;
+        for (var i = 0; i < cur.data.length; i++) {
+            for (var j = 0; j < cur.data[0].length; j++) {
+                // if(check(origin,i,j)){
+                    gameData[origin.x + i][origin.y + j] = 0;
+                // }
+            }
+        }
+    }
+
+    // 替换数据 gameData 矩阵中的数据
+    var setGameData = function() {
+        var origin = cur.origin;
+        for (var i = 0; i < cur.data.length; i++) {
+            for (var j = 0; j < cur.data[0].length; j++) {
+                // if(check(origin,i,j)){
+                    gameData[origin.x + i][origin.y + j] = cur.data[i][j];
+                // }
+            }
+        }
+    }
+
+    // 下移方法
+    var down = function() {
+        if(cur.canDown(isValid)) {
+            clearGameData();
+            cur.down();
+            setGameData();
+            refreshDiv(gameData, gameDivs);
+        }
+    }
+
+    /**
+     * 初始化
+     * @param {Object} doms dom元素 
+     */
     var init = function(doms) {
+
         gameDiv = doms.gameDiv;
         nextDiv = doms.nextDiv;
         cur = new Square();
@@ -86,23 +166,17 @@ var Game = function() {
         initDiv(nextDiv, next.data, nextDivs);
 
         // 手动设置 当前块的位置
-        var origin = cur.origin = {
+        cur.origin = {
             x: 10,
             y: 5
         }
-
-        // 替换数据 gameData 矩阵中的数据
-        
-        for (var i = 0; i < cur.data.length; i++) {
-            for (var j = 0; j < cur.data[0].length; j++) {
-                gameData[origin.x + i][origin.y + j] = cur.data[i][j];
-            }
-        }
+        setGameData();
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
     }
-
+    
     // 导出 api 
 
     this.init = init;
+    this.down = down;
 }

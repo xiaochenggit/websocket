@@ -15,3 +15,12 @@ var Square = function() {
     };
 
 };
+Square.prototype.canDown = function(isVlid) {
+    var text = {};
+    text.x = this.origin.x + 1;
+    text.y = this.origin.y;
+    return isVlid(text,this.data);
+}
+Square.prototype.down = function() {
+    this.origin.x +=1;
+}

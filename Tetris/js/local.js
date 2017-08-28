@@ -2,6 +2,24 @@ var Local = function() {
     // 游戏对象
     var game;
     
+    // 键盘绑定事件
+    var bindKeyEvent = function() {
+        document.onkeydown = function(e) {
+            var keyCode = e.keyCode;
+            if(keyCode == 38) { // up
+
+            } else if (keyCode == 39) { // right
+
+            } else if (keyCode == 40) { // down
+                game.down();
+            } else if (keyCode == 37) { // left 
+ 
+            } else if (keyCode == 32) { // space
+
+            }
+        }
+    }
+
     // start 
     var start = function() {
         var doms = {
@@ -10,6 +28,7 @@ var Local = function() {
         };
         game = new Game();
         game.init(doms);
+        bindKeyEvent();
     }
 
     // 导出
