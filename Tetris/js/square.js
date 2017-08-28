@@ -24,3 +24,21 @@ Square.prototype.canDown = function(isVlid) {
 Square.prototype.down = function() {
     this.origin.x +=1;
 }
+Square.prototype.canLeft = function(isVlid) {
+    var text = {};
+    text.x = this.origin.x;
+    text.y = this.origin.y - 1;
+    return isVlid(text,this.data);
+}
+Square.prototype.left = function() {
+    this.origin.y -=1;
+}
+Square.prototype.canRight = function(isVlid) {
+    var text = {};
+    text.x = this.origin.x;
+    text.y = this.origin.y + 1;
+    return isVlid(text,this.data);
+}
+Square.prototype.right = function() {
+    this.origin.y +=1;
+}

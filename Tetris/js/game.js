@@ -28,7 +28,7 @@ var Game = function() {
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,1,0,0,0],
         [0,0,0,0,0,0,0,0,0,0]
     ];
     
@@ -82,8 +82,7 @@ var Game = function() {
      * @returns 
      */
     var isValid = function(pos,data) {
-
-        for(var i = data.length - 1; i< data.length; i++) {
+        for(var i = 0; i< data.length; i++) {
             for(var j = 0; j< data[0].length; j++) {
                 if(data[i][j] != 0) {
                     if(!check(pos, i, j)) {
@@ -123,9 +122,9 @@ var Game = function() {
         var origin = cur.origin;
         for (var i = 0; i < cur.data.length; i++) {
             for (var j = 0; j < cur.data[0].length; j++) {
-                // if(check(origin,i,j)){
+                if(check(origin,i,j)){
                     gameData[origin.x + i][origin.y + j] = 0;
-                // }
+                }
             }
         }
     }
@@ -135,9 +134,9 @@ var Game = function() {
         var origin = cur.origin;
         for (var i = 0; i < cur.data.length; i++) {
             for (var j = 0; j < cur.data[0].length; j++) {
-                // if(check(origin,i,j)){
+                if(check(origin,i,j)){
                     gameData[origin.x + i][origin.y + j] = cur.data[i][j];
-                // }
+                }
             }
         }
     }
@@ -147,6 +146,26 @@ var Game = function() {
         if(cur.canDown(isValid)) {
             clearGameData();
             cur.down();
+            setGameData();
+            refreshDiv(gameData, gameDivs);
+        }
+    }
+
+    // 左移方法
+    var left = function() {
+        if(cur.canLeft(isValid)) {
+            clearGameData();
+            cur.left();
+            setGameData();
+            refreshDiv(gameData, gameDivs);
+        }
+    }
+
+    // 右移方法
+    var right = function() {
+        if(cur.canRight(isValid)) {
+            clearGameData();
+            cur.right();
             setGameData();
             refreshDiv(gameData, gameDivs);
         }
@@ -179,4 +198,6 @@ var Game = function() {
 
     this.init = init;
     this.down = down;
+    this.right = right;
+    this.left = left;
 }
