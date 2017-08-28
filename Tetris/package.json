@@ -1,0 +1,11 @@
+{
+  "name": "tetris-alone",
+  "version": "1.0.0",
+  "description": "tetris-alone by html js css",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xiaocheng",
+  "license": "ISC"
+}

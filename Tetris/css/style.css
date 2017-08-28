@@ -1,0 +1,48 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.game{
+    width: 200px;
+    height: 400px;
+    background-color: #f2faff;
+    border: 1px solid blue;
+    border-top: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.next{
+    width: 80px;
+    height: 80px;
+    background-color: #f2faff;
+    position: absolute;
+    top: 10px;
+    left: 250px;
+    border: 1px solid blue;
+}
+.info{
+    position: absolute;
+    top: 100px;
+    left: 250px;
+}
+/* 三种状态 没有填充的状态、正在操作物体的状态、已经下落完成的状态 */
+.none,
+.current,
+.done{
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    position: absolute;
+}
+.none{
+    background-color: #f2faff;
+}
+.current{
+    background-color: pink;
+    border: 1px solid red;
+}
+.done{
+    background-color: gray;
+    border: 1px solid black;
+}
