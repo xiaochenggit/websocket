@@ -26,11 +26,11 @@ var Local = function() {
     // start 
     var start = function() {
         var doms = {
-            gameDiv: document.getElementById('game'),
-            nextDiv: document.getElementById('next'),
-            timeDiv: document.getElementById('time'),
-            scoreDiv: document.getElementById('score'),
-            panelDiv: document.getElementById('panel')
+            gameDiv: document.getElementById('local_game'),
+            nextDiv: document.getElementById('local_next'),
+            timeDiv: document.getElementById('local_time'),
+            scoreDiv: document.getElementById('local_score'),
+            panelDiv: document.getElementById('local_panel')
         };
         game = new Game();
         game.init(doms);

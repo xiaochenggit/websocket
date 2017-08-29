@@ -2,6 +2,18 @@
     padding: 0px;
     margin: 0px;
 }
+.gameBox {
+    overflow: hidden;
+    width: 400px;
+    height: 500px;
+    float: left;
+}
+.gameBox h2 {
+    text-align: center;
+}
+.gameBox .box{  
+    position: relative;
+}
 .game{
     width: 200px;
     height: 400px;

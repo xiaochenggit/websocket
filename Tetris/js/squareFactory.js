@@ -15,4 +15,5 @@ var SquareFactory = function() {
         var next = new Square();
         return next;
     }
+    
 }
