@@ -1,16 +1,24 @@
 var Game = function() {
+    this.isOver = false;
     var squareFactory = new SquareFactory();
     // 方块
     var cur; // 当前方块
     var next; // 下一个方块
 
+    // 分数
+    var score = 0;
+
     // 定时器相关
     var timer;
     var TIMENUM = 600;
+    var gameTime = 0;
 
     // dom 元素
     var gameDiv;
     var nextDiv;
+    var timeDiv;
+    var scoreDiv;
+    var panelDiv;
 
     // 游戏矩阵
     var gameData = [
@@ -172,6 +180,7 @@ var Game = function() {
     }
 
     // 判断游戏是否结束
+    var that = this;
     var checkGameOver = function() {
         var isOver = false;
         for(var i = 0; i < gameData[0].length; i++) {
@@ -181,12 +190,16 @@ var Game = function() {
             }
         }
         if(isOver) {
+            that.isOver = true;
             clearInterval(timer);
+            panelDiv.innerHTML = '游戏已经结束！ ' + '用时：' + Math.floor(gameTime / 1000) 
+            + 's 得分：' + score;
         }
     }
 
     // 判断消行 操作，消行完成数组添加新的行
     var clearLines = function() {
+        var lines = 0;
         var length = gameData.length;
         var dataLength = gameData[0].length;
         for(var i = length - 1; i >= 0; i--) {
@@ -204,9 +217,35 @@ var Game = function() {
                     arr.push(0);
                 }
                 gameData.unshift(arr);
+                lines += 1;
             }
         }
+        if(lines > 0) {
+            addScore(lines);
+        }
     }
+
+    // 加分
+    var addScore = function(lines) {
+        switch (lines) {
+            case 1:
+                score += 10;
+                break;
+            case 2:
+                score += 30;
+                break;
+            case 3:
+                score += 60;
+                break;
+            case 4:
+                score += 100;
+                break;
+            default:
+                break;
+        }
+        scoreDiv.innerHTML = score;
+    }
+
     // 把next 赋值给 cur 并改变他的位置 生成新的 cur 然后渲染页面
     var setNextToCur = function() {
         cur = next;
@@ -219,6 +258,7 @@ var Game = function() {
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
     }
+    
     // 下移方法
     var down = function() {
         if(cur.canDown(isValid)) {
@@ -270,6 +310,9 @@ var Game = function() {
     var init = function(doms) {
         gameDiv = doms.gameDiv;
         nextDiv = doms.nextDiv;
+        timeDiv = doms.timeDiv;
+        scoreDiv = doms.scoreDiv;
+        panelDiv = doms.panelDiv;
         cur = squareFactory.makeCur();
         next = squareFactory.makeNext();
         initDiv(gameDiv, gameData, gameDivs);
@@ -280,18 +323,23 @@ var Game = function() {
         refreshDiv(next.data, nextDivs);
         // 定时器下落
         timer = setInterval(function() {
+            setGameTime();
             down();
         }, TIMENUM); 
     }
     
-    // 导出 api 
+    // 设置时间
+    var setGameTime = function() {
+        gameTime += TIMENUM;
+        timeDiv.innerHTML = Math.floor(gameTime / 1000);
+    } 
 
+    // 导出 api 
     this.init = init;
     this.down = down;
     this.right = right;
     this.left = left;
     this.rotate = rotate;
-
     // 下落
     this.fall = function(){
         while (down()) {

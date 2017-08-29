@@ -4,6 +4,9 @@ var Local = function() {
     // 键盘绑定事件
     var bindKeyEvent = function() {
         document.onkeydown = function(e) {
+            if(game.isOver) {
+                return false;
+            }
             e.preventDefault();
             var keyCode = e.keyCode;
             if(keyCode == 38) { // up
@@ -24,7 +27,10 @@ var Local = function() {
     var start = function() {
         var doms = {
             gameDiv: document.getElementById('game'),
-            nextDiv: document.getElementById('next')
+            nextDiv: document.getElementById('next'),
+            timeDiv: document.getElementById('time'),
+            scoreDiv: document.getElementById('score'),
+            panelDiv: document.getElementById('panel')
         };
         game = new Game();
         game.init(doms);
