@@ -10,8 +10,9 @@ var Game = function() {
 
     // 定时器相关
     var timer;
-    var TIMENUM = 600;
+    var TIMENUM = 0.6;
     var gameTime = 0;
+    var times = 0; // 掉落次数
 
     // dom 元素
     var gameDiv;
@@ -192,11 +193,27 @@ var Game = function() {
         if(isOver) {
             that.isOver = true;
             clearInterval(timer);
-            panelDiv.innerHTML = '游戏已经结束！ ' + '用时：' + Math.floor(gameTime / 1000) 
+            panelDiv.innerHTML = '游戏已经结束！ ' + '用时：' + Math.floor(gameTime) 
             + 's 得分：' + score;
         }
-    }
+    };
 
+    /**
+     * 生成干扰行
+     * @param {Number} 生成几行的干扰行
+     */
+    var addInterfereLines = function(linesLength) {
+        cur.origin.x -= linesLength;
+        gameData.splice(0,linesLength);
+        for (var i = 0 ; i < linesLength; i ++) {
+            var arr = [];
+            for (var j = 0,length = gameData[0].length; j < length; j++) {
+                arr.push(Math.random() > 0.5 ? 1 : 0);
+            }
+            gameData.push(arr);
+        }
+        refreshDiv(gameData, gameDivs);
+    };
     // 判断消行 操作，消行完成数组添加新的行
     var clearLines = function() {
         var lines = 0;
@@ -258,7 +275,7 @@ var Game = function() {
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
     }
-    
+
     // 下移方法
     var down = function() {
         if(cur.canDown(isValid)) {
@@ -325,13 +342,17 @@ var Game = function() {
         timer = setInterval(function() {
             setGameTime();
             down();
-        }, TIMENUM); 
+        }, TIMENUM * 1000); 
     }
     
     // 设置时间
     var setGameTime = function() {
         gameTime += TIMENUM;
-        timeDiv.innerHTML = Math.floor(gameTime / 1000);
+        timeDiv.innerHTML = Math.floor(gameTime);
+        times ++;
+        if (times % 10 == 0) {
+            addInterfereLines(1);
+        }
     } 
 
     // 导出 api 
