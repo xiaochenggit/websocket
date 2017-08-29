@@ -76,8 +76,8 @@ var Game = function() {
         }
     };
     /**
-     * 判断是否可以下移
-     * @param {any} pos cur + 1之后的坐标
+     * 判断是目标位置是否合法
+     * @param {any} pos 
      * @param {any} data 
      * @returns 
      */
