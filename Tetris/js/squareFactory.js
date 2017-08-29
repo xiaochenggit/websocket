@@ -1,10 +1,14 @@
 var SquareFactory = function() {
-    this.make = function() {
+    this.makeCur = function() {
         var cur = new Square();
         cur.origin = {
-            x: 0,
+            x: -2,
             y: 3
         }
         return cur;
+    }
+    this.makeNext = function() {
+        var next = new Square();
+        return next;
     }
 }

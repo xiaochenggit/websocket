@@ -1,7 +1,6 @@
 var Local = function() {
     // 游戏对象
     var game;
-    
     // 键盘绑定事件
     var bindKeyEvent = function() {
         document.onkeydown = function(e) {

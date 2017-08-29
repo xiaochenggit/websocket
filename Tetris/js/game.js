@@ -1,8 +1,12 @@
 var Game = function() {
-
+    var squareFactory = new SquareFactory();
     // 方块
     var cur; // 当前方块
     var next; // 下一个方块
+
+    // 定时器相关
+    var timer;
+    var TIMENUM = 600;
 
     // dom 元素
     var gameDiv;
@@ -43,9 +47,11 @@ var Game = function() {
      * @param {any} divs 初始化 divs 数组 
      */
     var initDiv = function(container, data, divs) {
-        for (var i = 0; i < data.length; i++) {
+        var length = data.length;
+        var dataLength = data[0].length;
+        for (var i = 0; i < length; i++) {
             var Div = [];
-            for(var j = 0; j < data[0].length; j++) {
+            for(var j = 0; j < dataLength; j++) {
                 var newNode = document.createElement('div');
                 newNode.className = 'none';
                 newNode.style.top = i * 20 + 'px';
@@ -63,8 +69,10 @@ var Game = function() {
      * @param {any} divs 刷新divs数组
      */
     var refreshDiv = function(data, divs) {
-        for (var i = 0; i < data.length; i++) {
-            for (var j = 0; j < data[0].length; j++) {
+        var length = data.length;
+        var dataLength = data[0].length;
+        for (var i = 0; i < length; i++) {
+            for (var j = 0; j < dataLength; j++) {
                 if (data[i][j] == 0) {
                     divs[i][j].className = 'none';
                 } else if (data[i][j] == 1) {
@@ -82,8 +90,10 @@ var Game = function() {
      * @returns 
      */
     var isValid = function(pos,data) {
-        for(var i = 0; i< data.length; i++) {
-            for(var j = 0; j< data[0].length; j++) {
+        var Length = data.length;
+        var dataLength = data[0].length;
+        for(var i = 0; i< Length; i++) {
+            for(var j = 0; j< dataLength; j++) {
                 if(data[i][j] != 0) {
                     if(!check(pos, i, j)) {
                         return false;
@@ -103,7 +113,7 @@ var Game = function() {
      */
     var check = function(pos, x, y) {
        if (pos.x + x < 0) {
-           return false
+           return true
        } else if (pos.x + x >= gameData.length) {
            return false;
        } else if (pos.y + y < 0) {
@@ -122,7 +132,7 @@ var Game = function() {
         var origin = cur.origin;
         for (var i = 0; i < cur.data.length; i++) {
             for (var j = 0; j < cur.data[0].length; j++) {
-                if(check(origin,i,j)){
+                if(check(origin,i,j) && origin.x + i >= 0){
                     gameData[origin.x + i][origin.y + j] = 0;
                 }
             }
@@ -132,15 +142,83 @@ var Game = function() {
     // 替换数据 gameData 矩阵中的数据
     var setGameData = function() {
         var origin = cur.origin;
-        for (var i = 0; i < cur.data.length; i++) {
-            for (var j = 0; j < cur.data[0].length; j++) {
-                if(check(origin,i,j)){
+        var Length = cur.data.length;
+        var dataLength = cur.data[0].length;
+        for (var i = 0; i < Length; i++) {
+            for (var j = 0; j < dataLength; j++) {
+                if(check(origin,i,j) && origin.x + i >= 0){
                     gameData[origin.x + i][origin.y + j] = cur.data[i][j];
                 }
             }
         }
     }
 
+    // 固定 cur 的方法 (当下落到底部之后无法下落固定 cur 并把其数据 改成 next 的数据，next重新赋值一个 square)
+    var fixed = function() {
+        var origin = cur.origin;
+        var Length = cur.data.length;
+        var dataLength = cur.data[0].length;
+        for (var i = 0; i < Length; i++) {
+            for (var j = 0; j < dataLength; j++) {
+                if(cur.data[i][j] == 2 && origin.x + i >= 0){
+                    gameData[origin.x + i][origin.y + j] = 1;
+                }
+            }
+        }
+        clearLines();
+        checkGameOver();
+        refreshDiv(gameData, gameDivs); 
+        setNextToCur();
+    }
+
+    // 判断游戏是否结束
+    var checkGameOver = function() {
+        var isOver = false;
+        for(var i = 0; i < gameData[0].length; i++) {
+            if(gameData[0][i] == 1) {
+                isOver = true;
+                break;
+            }
+        }
+        if(isOver) {
+            clearInterval(timer);
+        }
+    }
+
+    // 判断消行 操作，消行完成数组添加新的行
+    var clearLines = function() {
+        var length = gameData.length;
+        var dataLength = gameData[0].length;
+        for(var i = length - 1; i >= 0; i--) {
+            var clear = true;
+            for (var j = 0 ; j < dataLength; j ++) {
+                if(gameData[i][j] != 1) {
+                    clear = false;
+                }
+            }
+            if(clear) {
+                gameData.splice(i,1);
+                i ++;
+                var arr =[];
+                for (var k = 0 ; k < dataLength; k ++) {
+                    arr.push(0);
+                }
+                gameData.unshift(arr);
+            }
+        }
+    }
+    // 把next 赋值给 cur 并改变他的位置 生成新的 cur 然后渲染页面
+    var setNextToCur = function() {
+        cur = next;
+        cur.origin = {
+            x: -2,
+            y: 3
+        };
+        next = squareFactory.makeNext();
+        setGameData();
+        refreshDiv(gameData, gameDivs);
+        refreshDiv(next.data, nextDivs);
+    }
     // 下移方法
     var down = function() {
         if(cur.canDown(isValid)) {
@@ -150,6 +228,7 @@ var Game = function() {
             refreshDiv(gameData, gameDivs);
             return true;
         } else {
+            fixed();
             return false;
         }
     }
@@ -189,17 +268,20 @@ var Game = function() {
      * @param {Object} doms dom元素 
      */
     var init = function(doms) {
-        var squareFactory = new SquareFactory();
         gameDiv = doms.gameDiv;
         nextDiv = doms.nextDiv;
-        cur = squareFactory.make();
-        next = new Square();
+        cur = squareFactory.makeCur();
+        next = squareFactory.makeNext();
         initDiv(gameDiv, gameData, gameDivs);
         initDiv(nextDiv, next.data, nextDivs);
         // 设置数据
         setGameData();
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
+        // 定时器下落
+        timer = setInterval(function() {
+            down();
+        }, TIMENUM); 
     }
     
     // 导出 api 
