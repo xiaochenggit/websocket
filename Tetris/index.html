@@ -7,6 +7,7 @@
     <title>Tetris-Alone</title>
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/socket.io.js"></script>
 </head>
 <body>
     <div class="des"><h1>游戏说明：空格→下坠、left→左、up→上、right→右、down→下</h1></div>
@@ -34,11 +35,17 @@
             </div>
         </div>
     </div>
+    <div class="message">
+        <input type="text" id="sendText"><button id="sendBtn">提交</button>
+    </div>
+    <div id="screen">
+    </div>
     <script src="./js/square.js"></script>
     <script src="./js/squareFactory.js"></script>
     <script src="./js/game.js"></script>
     <script src="./js/local.js"></script>
     <script src="./js/remote.js"></script>
+    <script src="./js/socketDom.js"></script>
     <script src='./js/index.js'></script>
 </body>
 </html>

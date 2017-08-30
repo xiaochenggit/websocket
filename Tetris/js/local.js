@@ -7,17 +7,21 @@ var Local = function() {
             if(game.isOver) {
                 return false;
             }
-            e.preventDefault();
             var keyCode = e.keyCode;
             if(keyCode == 38) { // up
+                e.preventDefault();
                 game.rotate();
             } else if (keyCode == 39) { // right
+                e.preventDefault();
                 game.right();
             } else if (keyCode == 40) { // down
+                e.preventDefault();
                 game.down();
             } else if (keyCode == 37) { // left 
+                e.preventDefault();
                 game.left();
             } else if (keyCode == 32) { // space
+                e.preventDefault();
                 game.fall();
             }
         }

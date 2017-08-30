@@ -1,6 +1,10 @@
+var socket = io('ws://localhost:3000/');
 var Game = function() {
+    var squareFactory = new SquareFactory(); // 工厂
+
+    // 游戏是否结束 
     this.isOver = false;
-    var squareFactory = new SquareFactory();
+    
     // 方块
     var cur; // 当前方块
     var next; // 下一个方块
@@ -338,9 +342,11 @@ var Game = function() {
         setGameData();
         refreshDiv(gameData, gameDivs);
         refreshDiv(next.data, nextDivs);
+        socket.emit('init', gameData, next.data);
         // 定时器下落
         timer = setInterval(function() {
             setGameTime();
+            socket.emit('gameDes', gameData, next.data, gameTime, score);
             down();
         }, TIMENUM * 1000); 
     }
@@ -348,12 +354,26 @@ var Game = function() {
     // 设置时间
     var setGameTime = function() {
         gameTime += TIMENUM;
-        timeDiv.innerHTML = Math.floor(gameTime);
-        times ++;
-        if (times % 10 == 0) {
-            addInterfereLines(1);
-        }
+        timeDiv.innerHTML = gameTime.toFixed(1);
+        // times ++;
+        // if (times % 10 == 0) {
+        //     addInterfereLines(1);
+        // }
     } 
+
+    // 设置游戏名字
+    var users = [];
+    var setUserName = function(str) {
+        str = str || '请先设置用户名,才可以开始游戏！';
+        var userName = prompt(str, 'Your UserName');
+        if( userName == null || userName.trim() == '') {
+            setUserName(str);
+        } else {
+            socket.emit('setUserName', userName , function( userName ) {
+                setUserName(userName + '的名字已经被占用了！');
+            });
+        }
+    }
 
     // 导出 api 
     this.init = init;
@@ -365,5 +385,14 @@ var Game = function() {
     this.fall = function(){
         while (down()) {
         }
+    };
+
+    this.initDiv = initDiv;
+    this.refreshDiv = refreshDiv;
+
+    // socket
+    this.startSocket = function() {
+        var socketDom  = new SocketDom();
+        setUserName();
     }
 }
