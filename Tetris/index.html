@@ -12,11 +12,11 @@
 <body>
     <div class="des"><h1>游戏说明：空格→下坠、left→左、up→上、right→右、down→下</h1></div>
     <div class="gameBox" id="local">
-        <h2>你的游戏</h2>
+        <h2><span id="local_name">你的</span>游戏</h2>
         <div class="box">
             <div id="local_game" class="game"></div>
             <div id='local_next' class="next"></div>
-            <div class="info">
+            <div class="info" id="local_info">
                 <div>已用时：<span id="local_time">0</span>s</div>
                 <div>已得分：<span id="local_score">0</span>分</div>
                 <div id="local_panel"></div>
@@ -24,11 +24,11 @@
         </div>
     </div>
     <div class="gameBox" id="remote">
-        <h2>对方的游戏</h2>
+        <h2><span id="remote_name">对方</span>的游戏</h2>
         <div class="box">
             <div id="remote_game" class="game"></div>
             <div id='remote_next' class="next"></div>
-            <div class="info">
+            <div class="info" id="remote_info">
                 <div>已用时：<span id="remote_time">0</span>s</div>
                 <div>已得分：<span id="remote_score">0</span>分</div>
                 <div id="remote_panel"></div>

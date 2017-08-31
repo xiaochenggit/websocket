@@ -331,6 +331,7 @@ var Game = function() {
     var init = function(doms) {
         gameDiv = doms.gameDiv;
         nextDiv = doms.nextDiv;
+        gameDiv.innerHTML = nextDiv.innerHTML = '';
         timeDiv = doms.timeDiv;
         scoreDiv = doms.scoreDiv;
         panelDiv = doms.panelDiv;
